@@ -16,4 +16,10 @@ class TENSORFLOWRL_API UFileInteract : public UBlueprintFunctionLibrary
 	GENERATED_BODY()
 		UFUNCTION(BlueprintCallable, category="File I/O")
 		static FString LoadFileToString(FString Filename);
+
+		UFUNCTION(BlueprintCallable, category = "File I/O")
+		static FString LoadStringToFile(FString Filename, FString Message);
+
+		UFUNCTION(BlueprintCallable, category = "File I/O")
+		static FString LoadStringArrayToFile(FString Filename, TArray<FString> MessageArray);
 };

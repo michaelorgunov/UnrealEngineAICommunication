@@ -6,8 +6,14 @@
 ### Unreal Engine:
 - Create a C++ class (mine is called ```FileInteract```) that creates functions to write and read from files.
 - In your desired character blueprint, collect the desired data for your model and write it to a file using String Array to File native function.
+
+https://github.com/michaelorgunov/TensorflowRL/assets/98727592/65607975-d11a-4f35-a2f4-79c330344af1
+
 ### Python "server":
 - Create your model and every time it iterates, read data from the UE file and write the desired character input into the other file that UE is reading data from.
+
+https://github.com/michaelorgunov/TensorflowRL/assets/98727592/62aa0ed0-f16a-4339-833c-b2ff754fb694
+
 ### Overall, this method is fairly inefficient since it relies on write to perform character actions
 
 ## TCP Sockets:

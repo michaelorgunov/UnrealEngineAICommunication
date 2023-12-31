@@ -2,7 +2,6 @@ import time
 from Pawn import Pawn
 from Direction import Direction
 
-#
 def extractData(filename):
     ABSOLUTE = "../Content/Files/"
     filePath = ABSOLUTE + filename

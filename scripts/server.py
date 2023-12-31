@@ -1,4 +1,7 @@
 import socket
+import time
+from Pawn import Pawn
+from Direction import Direction
 
 def createConnection():
     # get the hostname
@@ -19,7 +22,6 @@ def createConnection():
 
 def sendMessage(MESSAGE, s):
     s.send(MESSAGE.encode()) 
-    #s.close()
 
 def receiveMessage(s):
     BUFFER_SIZE = 1024
@@ -30,8 +32,9 @@ def receiveMessage(s):
 def closeConnection(s):
     s.close()
 
-
 def server_program():
+    pawn = Pawn()
+
     conn = createConnection()
     while True:
         # receive data stream. it won't accept data packet greater than 1024 bytes
@@ -39,9 +42,12 @@ def server_program():
         if not data:
             # if data is not received break
             break
-        print("from connected user: " + str(data))
-        data = "SERVER MESSAGE!"
-        sendMessage(data, conn) # send data to the client
+        print(data)
+        distance, xpos, zpos, xvel, zvel, xacc, zacc = data.split(",")
+        pawn.update(distance, xpos, zpos, xvel, zvel, xacc, zacc)
+        move = pawn.move()
+        
+        sendMessage(move.value, conn) # send data to the client
 
     closeConnection(conn)  # close the connection
 

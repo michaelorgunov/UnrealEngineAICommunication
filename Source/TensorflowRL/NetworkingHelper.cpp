@@ -19,11 +19,11 @@ bool UNetworkingHelper::InitiateClient(FString HostIPAddress, int PortNumber)
 	ESocketProtocolFamily family = ESocketProtocolFamily::IPv4;
 	ISocketSubsystem* SocketSubsystem = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM);
 	if (SocketSubsystem) {
-		UE_LOG(LogTemp, Error, TEXT("TCP: SUCCESSFULLY CREATED SOCKET SUBSYSTEM"));
+		UE_LOG(LogTemp, Display, TEXT("TCP: SUCCESSFULLY CREATED SOCKET SUBSYSTEM"));
 		// Create socket
 		socket = SocketSubsystem->CreateSocket(FName(TEXT("TCP")), FString("UDP IPV4 Socket"), family);
 		if (socket != NULL) { 
-			UE_LOG(LogTemp, Error, TEXT("TCP: SUCCESSFULLY CREATED SOCKET"));
+			UE_LOG(LogTemp, Display, TEXT("TCP: SUCCESSFULLY CREATED SOCKET"));
 			// Create IP Address
 			FIPv4Address ip;
 			FIPv4Address::Parse(HostIPAddress, ip);
@@ -35,7 +35,7 @@ bool UNetworkingHelper::InitiateClient(FString HostIPAddress, int PortNumber)
 			// Connect to server
 			bool connected = socket->Connect(*address);
 			if (connected) {
-				UE_LOG(LogTemp, Error, TEXT("TCP: SUCCESSFULLY CONNECTED"));
+				UE_LOG(LogTemp, Display, TEXT("TCP: SUCCESSFULLY CONNECTED"));
 				return true;
 			}
 			else {
@@ -76,9 +76,15 @@ bool UNetworkingHelper::SendData(const TArray<uint8>& DataToSend)
 bool UNetworkingHelper::ReceiveData(TArray<uint8>& ReceivedData)
 {
 	if (socket) {
+	UE_LOG(LogTemp, Display, TEXT("TCP RECEIVE: Valid Socket == True"));
+
 		uint32 size;
 		if (socket->HasPendingData(size)) {
+			UE_LOG(LogTemp, Display, TEXT("TCP RECEIVE: Has Pending Data == True"));
+
 			int32 bytesRead = 0;
+			int32 bufferSize = 1024;
+			ReceivedData.SetNumUninitialized(bufferSize);
 			bool success = socket->Recv(ReceivedData.GetData(), ReceivedData.Num(), bytesRead);
 
 			if (success && bytesRead > 0) {
@@ -86,7 +92,7 @@ bool UNetworkingHelper::ReceiveData(TArray<uint8>& ReceivedData)
 				return true;
 			}
 			else {
-				UE_LOG(LogTemp, Error, TEXT("Failed to receive data from server"));
+				UE_LOG(LogTemp, Error, TEXT("Failed to receive data from server. success: %"), success);
 				return false;
 			}
 		}

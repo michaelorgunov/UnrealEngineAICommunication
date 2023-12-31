@@ -5,7 +5,7 @@ def createConnection():
     print("Host Name: " + str(socket.gethostname()))
 
     host = '127.0.0.1'#socket.gethostname()
-    port = 5000  # initiate port no above 1024
+    port = 8085  
 
     server_socket = socket.socket()  # get instance
     # look closely. The bind() function takes tuple as argument
@@ -40,7 +40,7 @@ def server_program():
             # if data is not received break
             break
         print("from connected user: " + str(data))
-        data = input(' -> ')
+        data = "SERVER MESSAGE!"
         sendMessage(data, conn) # send data to the client
 
     closeConnection(conn)  # close the connection

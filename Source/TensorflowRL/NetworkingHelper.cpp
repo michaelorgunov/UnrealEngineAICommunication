@@ -7,7 +7,27 @@
 #include "UObject/NameTypes.h"
 
 //CreateSocket(const FName& SocketType, const FString& SocketDescription, bool bForceUDP = false)
-FSocket* UNetworkingHelper::socket = nullptr;
+//FSocket* UNetworkingHelper::socket = nullptr;
+
+//UNetworkingHelper::UNetworkingHelper()
+//{
+//	ESocketProtocolFamily family = ESocketProtocolFamily::IPv4;
+//	ISocketSubsystem* SocketSubsystem = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM);
+//	if (SocketSubsystem) {
+//		UE_LOG(LogTemp, Display, TEXT("TCP: SUCCESSFULLY CREATED SOCKET SUBSYSTEM"));
+//		// Create socket
+//		socket = SocketSubsystem->CreateSocket(FName(TEXT("TCP")), FString("UDP IPV4 Socket"), family);
+//	}
+//}
+//
+//UNetworkingHelper::~UNetworkingHelper()
+//{
+//	if (socket) {
+//		socket->Close();
+//		ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->DestroySocket(socket);
+//		socket = nullptr;
+//	}
+//}
 
 bool UNetworkingHelper::InitiateClient(FString HostIPAddress, int PortNumber)
 {

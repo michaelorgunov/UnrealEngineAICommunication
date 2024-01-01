@@ -42,7 +42,7 @@ def handle_client(client, pawn):
         if pawn.dead:
             print("PAWN DEAD")
             break
-        print("client ->" + str(client.getpeername()[1]))
+        # print("client ->" + str(client.getpeername()[1]))
 
         try:
             

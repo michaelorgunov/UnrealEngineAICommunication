@@ -22,7 +22,7 @@ bool UNetworkingHelper::InitiateClient(FString HostIPAddress, int PortNumber)
 		UE_LOG(LogTemp, Display, TEXT("TCP: SUCCESSFULLY CREATED SOCKET SUBSYSTEM"));
 		// Create socket
 		socket = SocketSubsystem->CreateSocket(FName(TEXT("TCP")), FString("UDP IPV4 Socket"), family);
-		if (socket != NULL) { 
+		if (socket) { 
 			UE_LOG(LogTemp, Display, TEXT("TCP: SUCCESSFULLY CREATED SOCKET"));
 			// Create IP Address
 			FIPv4Address ip;
@@ -57,9 +57,13 @@ bool UNetworkingHelper::InitiateClient(FString HostIPAddress, int PortNumber)
 bool UNetworkingHelper::SendData(const TArray<uint8>& DataToSend)
 {
 	if (socket) {
+		int32 port = socket->GetPortNo();
+		UE_LOG(LogTemp, Warning, TEXT("SEND TO PORT: %d"), port);
+
 		int32 BytesSent = 0;
 		bool success = socket->Send(DataToSend.GetData(), DataToSend.Num(), BytesSent);
 		if (success) {
+			UE_LOG(LogTemp, Warning, TEXT("Sent Data"));
 			return true;
 		}
 		else {
@@ -75,12 +79,29 @@ bool UNetworkingHelper::SendData(const TArray<uint8>& DataToSend)
 
 bool UNetworkingHelper::ReceiveData(TArray<uint8>& ReceivedData)
 {
-	if (socket) {
-	UE_LOG(LogTemp, Display, TEXT("TCP RECEIVE: Valid Socket == True"));
+	//if (socket) {
+	//	uint32 PendingDataSize = 0;
+	//	while (socket->HasPendingData(PendingDataSize) && PendingDataSize > 0)
+	//	{
+	//		TArray<uint8, TInlineAllocator<1024>> ReceivedData;
+	//		ReceivedData.SetNumZeroed(PendingDataSize + 1);
 
+	//		int32 BytesRead = 0;
+	//		if (socket->Recv(ReceivedData.GetData(), ReceivedData.Num(), BytesRead) && BytesRead > 0)
+	//		{
+	//			ReceivedData.Last() = 0; // Ensure null terminator
+	//		}
+	//	}
+	//	UE_LOG(LogTemp, Warning, TEXT("Received Data"));
+
+	//	return true;
+	if (socket) {
+		//UE_LOG(LogTemp, Display, TEXT("TCP RECEIVE: Valid Socket == True"));
+		int32 port = socket->GetPortNo();
+		UE_LOG(LogTemp, Warning, TEXT("RECIEVE FROM PORT: %d"), port);
 		uint32 size;
 		if (socket->HasPendingData(size)) {
-			UE_LOG(LogTemp, Display, TEXT("TCP RECEIVE: Has Pending Data == True"));
+			//UE_LOG(LogTemp, Display, TEXT("TCP RECEIVE: Has Pending Data == True"));
 
 			int32 bytesRead = 0;
 			int32 bufferSize = 1024;
@@ -111,14 +132,15 @@ TArray<uint8> UNetworkingHelper::StringToByteArray(FString InputString)
 {
 	TArray<uint8> byteArray;
 	const TCHAR* stringPtr = *InputString;
+	if (InputString.Len() > 0) {
+		while (*stringPtr)
+		{
+			// Retrieve the ASCII value of each character in the string
+			uint8 charByte = static_cast<uint8>(*stringPtr);
+			byteArray.Add(charByte);
 
-	while (*stringPtr)
-	{
-		// Retrieve the ASCII value of each character in the string
-		uint8 charByte = static_cast<uint8>(*stringPtr);
-		byteArray.Add(charByte);
-
-		++stringPtr;
+			++stringPtr;
+		}
 	}
 	return byteArray;
 }
@@ -126,12 +148,16 @@ TArray<uint8> UNetworkingHelper::StringToByteArray(FString InputString)
 FString UNetworkingHelper::ByteArrayToString(TArray<uint8> ByteArray)
 {
 	FString resultString;
-
-	for (uint8 byteValue : ByteArray)
-	{
-		// Convert each byte value back to its ASCII character equivalent
-		TCHAR charValue = static_cast<TCHAR>(byteValue);
-		resultString.AppendChar(charValue);
+	if (ByteArray.Num() > 0) {
+		for (uint8 byteValue : ByteArray)
+		{
+			// Convert each byte value back to its ASCII character equivalent
+			TCHAR charValue = static_cast<TCHAR>(byteValue);
+			resultString.AppendChar(charValue);
+		}
+	}
+	else {
+		return " ";
 	}
 
 	return resultString;

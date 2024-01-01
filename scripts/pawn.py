@@ -7,6 +7,7 @@ from Direction import Direction
 class Pawn:
     def __init__(self):
         self.brain = Brain(400)
+        self.nextMove = Direction.NONE
         self.posx = []
         self.posz = []
         self.velx = []
@@ -21,7 +22,7 @@ class Pawn:
     
     def update(self, distance, posx, posz, velx, velz, accx, accz):
         if (not self.reachedGoal and not self.dead):
-            self.move()
+            self.nextMove = self.move()
             self.distance = float(distance)
             self.posx.append(float(posx))
             self.posz.append(float(posz))
@@ -43,4 +44,12 @@ class Pawn:
             return Direction.NONE
         
     def calculateFitness(self):
-        self.fitness = 1.0/(self.distance*self.distance)
+        if self.reachedGoal:
+            self.fitness = 1.0/(self.brain.step * self.brain.step)
+        else:
+            self.fitness = 1.0/(self.distance*self.distance)
+        
+    def retrieveChild(self):
+        child = Dot()
+        child.brain = self.brain.clone()
+        return child

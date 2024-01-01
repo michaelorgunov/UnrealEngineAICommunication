@@ -11,5 +11,14 @@ class Brain:
     def randomize(self):
         for i in range(self.directions.size):
             self.directions[i] = random.choice(list(Direction))
-brain = Brain(400)
-
+    
+    def clone(self):
+        clone = np.copy(self.directions)            
+        return clone
+    
+    def mutate(self):
+        mutationRate = 0.01
+        for i in range(self.directions.size):
+            random = random.random(0,1)
+            if (random < mutationRate):
+                self.directions[i] = random.choice(list(Direction))

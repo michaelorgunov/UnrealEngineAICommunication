@@ -61,7 +61,7 @@ def handle_client(client, pawn):
         
 def server_program():
     # pawnCount is number of characters that must connect 
-    pawnCount = 80
+    pawnCount = 4
     counter = 0
     
     population = Population(pawnCount)
@@ -89,6 +89,10 @@ def server_program():
         clientThread = threading.Thread(target=handle_client, args=(pawnIndexToSocket[i], population.retrievePawnAtIndex(i-1)))
         print("INDEX: " + str(i) + ":" + str(pawnIndexToSocket[i].getpeername()[1]))
         clientThread.start()
+    
+    for pawn in population.pawns:
+        pawn.updateMove(Direction.RESET)
+    
         # data = receiveMessage(client)
         # if not data:
         #     # if data is not received break

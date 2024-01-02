@@ -53,3 +53,6 @@ class Pawn:
         child = Dot()
         child.brain = self.brain.clone()
         return child
+    
+    def updateMove(self, move):
+        self.nextMove = move

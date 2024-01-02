@@ -5,3 +5,4 @@ class Direction(Enum):
     RIGHT = "d"
     UP = "w"
     NONE = ""
+    RESET = "RESET"

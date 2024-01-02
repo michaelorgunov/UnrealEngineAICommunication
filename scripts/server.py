@@ -61,7 +61,7 @@ def handle_client(client, pawn):
         
 def server_program():
     # pawnCount is number of characters that must connect 
-    pawnCount = 5
+    pawnCount = 80
     counter = 0
     
     population = Population(pawnCount)

@@ -14,7 +14,7 @@ https://github.com/michaelorgunov/TensorflowRL/assets/98727592/65607975-d11a-4f3
 
 https://github.com/michaelorgunov/TensorflowRL/assets/98727592/62aa0ed0-f16a-4339-833c-b2ff754fb694
 
-### Overall, this method is fairly inefficient since it relies on write to perform character actions
+### Overall, this method is fairly inefficient since it relies on write to perform character actions and challenging to scale since there will be two files for each character that is created. The more characters, the more delay and issues will arise.
 
 ## TCP Sockets:
 - In progress. Idea is to create a server and then a UE c++ socket with functions to interact with blueprints. 

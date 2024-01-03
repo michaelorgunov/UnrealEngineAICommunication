@@ -42,28 +42,30 @@ class Population:
         for pawn in self.pawns[1:]:
             parent = self.selectParent()
             newGeneration.append(parent.retrieveChild())
-        self.pawns = newGeneration.clone() # MAYBE ISSUE
+        self.pawns = newGeneration
         self.generation += self.generation
             
         
     def selectParent(self):
-        random = random.randint(0, self.calculateFitnessSum())
+        randomNum = random.randint(0, int(self.calculateFitnessSum()))
         runningSum = 0
         for pawn in self.pawns:
             runningSum += pawn.fitness
-            if runningSum > random:
+            if runningSum > randomNum:
                 return pawn
             
         return None
     
     def mutate(self):
         for pawn in self.pawns:
+            print(type(pawn))
+            print(pawn.brain)
             pawn.brain.mutate()
             
     def setBestPawn(self):
         max = 0.0
         maxIndex = 0
-        for i in range(self.pawns.size):
+        for i in range(len(self.pawns)):
             if self.pawns[i].fitness > max:
                 max = self.pawns[i].fitness
                 maxIndex = i
@@ -71,3 +73,7 @@ class Population:
         
     def retrievePawnAtIndex(self, index):
         return self.pawns[index]
+    
+    def realive(self):
+        for pawn in self.pawns:
+            pawn.dead = False

@@ -20,8 +20,8 @@ def createConnection():
     return server_socket
 
 def sendMessage(MESSAGE, s):
-    print(u"client sent data:", MESSAGE)
-    print("socket send: " + str(s.getpeername()))
+    # print(u"client sent data:", MESSAGE)
+    # print("socket send: " + str(s.getpeername()))
     s.send(MESSAGE.encode()) 
     
 
@@ -34,27 +34,19 @@ def receiveMessage(s):
 def closeConnection(s):
     s.close()
 
-
-
 def handle_client(client, pawn):
-    client.settimeout(1)  # Set a timeout for socket operations
     while True:
         if pawn.dead:
             print("PAWN DEAD")
             break
         # print("client ->" + str(client.getpeername()[1]))
 
-        try:
-            
+        try: 
             data = receiveMessage(client)
             if data:
                 distance, xpos, zpos, xvel, zvel, xacc, zacc = data.split(',')
                 pawn.update(distance, xpos, zpos, xvel, zvel, xacc, zacc)
                 sendMessage(pawn.nextMove.value, client)
-        except socket.timeout:
-            # Handle timeout (no data received within the timeout period)
-            print("TIMEOUT: " + str(client.getpeername()[1]))
-            pass
         except Exception as e:
             print("Error occurred:", e)
             break
@@ -63,7 +55,7 @@ def server_program():
     # pawnCount is number of characters that must connect 
     pawnCount = 4
     counter = 0
-    
+    GENERATION_COUNT = 3
     population = Population(pawnCount)
     pawnIndexToSocket = {} # Dictionary containing a created index and an identifier for transfers
     
@@ -89,32 +81,31 @@ def server_program():
         clientThread = threading.Thread(target=handle_client, args=(pawnIndexToSocket[i], population.retrievePawnAtIndex(i-1)))
         print("INDEX: " + str(i) + ":" + str(pawnIndexToSocket[i].getpeername()[1]))
         clientThread.start()
-    
-    for pawn in population.pawns:
-        pawn.updateMove(Direction.RESET)
-    
-        # data = receiveMessage(client)
-        # if not data:
-        #     # if data is not received break
-        #     break
-        
-        # distance, xpos, zpos, xvel, zvel, xacc, zacc = data.split(",")
-
-        # if (population.allDead()):
-        #     population.calculateFitness()
-        #     population.naturalSelection()
-        #     population.mutate()
-        #     if (population.generation < 2):
-        #         population.update(distance, xpos, zpos, xvel, zvel, xacc, zacc)
-        # else:
-        #     population.update(distance, xpos, zpos, xvel, zvel, xacc, zacc)
             
-        # move = population.pawns[0].move()
-        
-        # sendMessage(move.value, client) # send data to the client
+    while True:
+        if (population.generation >= GENERATION_COUNT):
+            print("REACHED TARGET GENERATION")
+            break
 
+        if (population.allDead()):
+            for pawn in population.pawns:
+                print("RESETTING POSITION")
+                pawn.updateMove(Direction.RESET)
+            print("ALL ARE DEAD")
+            population.calculateFitness()
+            population.naturalSelection()
+            population.mutate()
+            population.realive()
+            
+            for i in range(1, len(pawnIndexToSocket)+1):
+                clientThread = threading.Thread(target=handle_client, args=(pawnIndexToSocket[i], population.retrievePawnAtIndex(i-1)))
+                print("INDEX: " + str(i) + ":" + str(pawnIndexToSocket[i].getpeername()[1]))
+                clientThread.start()
+
+    
+                
     #TODO:  CLOSE ALL CONNECTIONS
-    #closeConnection(server)  # close the connection
+    closeConnection(server)  # close the connection
 
 
 if __name__ == '__main__':

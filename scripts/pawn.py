@@ -32,10 +32,14 @@ class Pawn:
             self.accz.append(float(accz))
             if (float(posx) < -10 or float(posx) > 2390 or float(posz) < -1600):
                 self.dead = True
-            if (self.distance < 100):
+                print("PAWN DIED")
+            elif (self.distance < 100):
                 self.reachedGoal = True
+                self.dead = True
+                print("PAWN DIED BY REACHING GOAL")
+
     def move(self):
-        if (not self.reachedGoal):
+        if (not self.reachedGoal or not self.dead):
             if (self.brain.directions.size > self.brain.step):
                 move = self.brain.directions[self.brain.step]
                 self.brain.step += 1
@@ -50,8 +54,8 @@ class Pawn:
             self.fitness = 1.0/(self.distance*self.distance)
         
     def retrieveChild(self):
-        child = Dot()
-        child.brain = self.brain.clone()
+        child = Pawn()
+        child.brain = self.brain
         return child
     
     def updateMove(self, move):

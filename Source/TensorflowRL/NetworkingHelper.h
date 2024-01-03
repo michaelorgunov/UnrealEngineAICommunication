@@ -27,4 +27,6 @@ class TENSORFLOWRL_API UNetworkingHelper : public UBlueprintFunctionLibrary
 		FString ByteArrayToString(TArray<uint8> ByteArray);
 	private:
 		FSocket* socket;
+		FTimerHandle TimerHandle;
+
 };

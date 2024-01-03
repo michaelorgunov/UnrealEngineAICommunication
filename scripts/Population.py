@@ -58,8 +58,6 @@ class Population:
     
     def mutate(self):
         for pawn in self.pawns:
-            print(type(pawn))
-            print(pawn.brain)
             pawn.brain.mutate()
             
     def setBestPawn(self):

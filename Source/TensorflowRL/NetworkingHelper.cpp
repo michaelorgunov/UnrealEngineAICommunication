@@ -5,29 +5,8 @@
 #include "Sockets.h"
 #include "SocketSubsystem.h" 
 #include "UObject/NameTypes.h"
-
-//CreateSocket(const FName& SocketType, const FString& SocketDescription, bool bForceUDP = false)
-//FSocket* UNetworkingHelper::socket = nullptr;
-
-//UNetworkingHelper::UNetworkingHelper()
-//{
-//	ESocketProtocolFamily family = ESocketProtocolFamily::IPv4;
-//	ISocketSubsystem* SocketSubsystem = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM);
-//	if (SocketSubsystem) {
-//		UE_LOG(LogTemp, Display, TEXT("TCP: SUCCESSFULLY CREATED SOCKET SUBSYSTEM"));
-//		// Create socket
-//		socket = SocketSubsystem->CreateSocket(FName(TEXT("TCP")), FString("UDP IPV4 Socket"), family);
-//	}
-//}
-//
-//UNetworkingHelper::~UNetworkingHelper()
-//{
-//	if (socket) {
-//		socket->Close();
-//		ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->DestroySocket(socket);
-//		socket = nullptr;
-//	}
-//}
+#include "TimerManager.h"
+#include "Async/Async.h"
 
 bool UNetworkingHelper::InitiateClient(FString HostIPAddress, int PortNumber)
 {
@@ -79,17 +58,21 @@ bool UNetworkingHelper::SendData(const TArray<uint8>& DataToSend)
 	if (socket) {
 		int32 port = socket->GetPortNo();
 		UE_LOG(LogTemp, Warning, TEXT("SEND TO PORT: %d"), port);
+		//uint32 sentAttempts = 0;
+		//while (sentAttempts < 10000) {
+			int32 BytesSent = 0;
+			bool success = socket->Send(DataToSend.GetData(), DataToSend.Num(), BytesSent);
+			if (success) {
+				UE_LOG(LogTemp, Warning, TEXT("Sent Data"));
 
-		int32 BytesSent = 0;
-		bool success = socket->Send(DataToSend.GetData(), DataToSend.Num(), BytesSent);
-		if (success) {
-			UE_LOG(LogTemp, Warning, TEXT("Sent Data"));
-			return true;
-		}
-		else {
-			UE_LOG(LogTemp, Error, TEXT("Failed to send data"));
-			return false;
-		}
+				return true;
+			}
+			else {
+				//sentAttempts++;
+				return false;
+			}
+		//}
+		return false;
 	}
 	else {
 		UE_LOG(LogTemp, Error, TEXT("Invalid socket"));
@@ -99,53 +82,42 @@ bool UNetworkingHelper::SendData(const TArray<uint8>& DataToSend)
 
 bool UNetworkingHelper::ReceiveData(TArray<uint8>& ReceivedData)
 {
-	//if (socket) {
-	//	uint32 PendingDataSize = 0;
-	//	while (socket->HasPendingData(PendingDataSize) && PendingDataSize > 0)
-	//	{
-	//		TArray<uint8, TInlineAllocator<1024>> ReceivedData;
-	//		ReceivedData.SetNumZeroed(PendingDataSize + 1);
-
-	//		int32 BytesRead = 0;
-	//		if (socket->Recv(ReceivedData.GetData(), ReceivedData.Num(), BytesRead) && BytesRead > 0)
-	//		{
-	//			ReceivedData.Last() = 0; // Ensure null terminator
-	//		}
-	//	}
-	//	UE_LOG(LogTemp, Warning, TEXT("Received Data"));
-
-	//	return true;
 	if (socket) {
+
 		//UE_LOG(LogTemp, Display, TEXT("TCP RECEIVE: Valid Socket == True"));
 		int32 port = socket->GetPortNo();
 		UE_LOG(LogTemp, Warning, TEXT("RECIEVE FROM PORT: %d"), port);
 		uint32 size;
-		if (socket->HasPendingData(size)) {
-			//UE_LOG(LogTemp, Display, TEXT("TCP RECEIVE: Has Pending Data == True"));
+		//uint32 receiveAttempts = 0;
+		//while (receiveAttempts < 100000) {
+			if (socket->HasPendingData(size)) {
+				//UE_LOG(LogTemp, Display, TEXT("TCP RECEIVE: Has Pending Data == True"));
 
-			int32 bytesRead = 0;
-			int32 bufferSize = 1024;
-			ReceivedData.SetNumUninitialized(bufferSize);
-			bool success = socket->Recv(ReceivedData.GetData(), ReceivedData.Num(), bytesRead);
+				int32 bytesRead = 0;
+				int32 bufferSize = 1024;
+				ReceivedData.SetNumUninitialized(bufferSize);
+				bool success = socket->Recv(ReceivedData.GetData(), ReceivedData.Num(), bytesRead);
 
-			if (success && bytesRead > 0) {
-				ReceivedData.SetNum(bytesRead);
-				return true;
+				if (success && bytesRead > 0) {
+					ReceivedData.SetNum(bytesRead);
+					return true;
+				}
+				else {
+					//receiveAttempts++;
+					return false;
+				}
 			}
 			else {
-				UE_LOG(LogTemp, Error, TEXT("Failed to receive data from server. success: %"), success);
+				//receiveAttempts++;
 				return false;
 			}
-		}
-		else {
-			UE_LOG(LogTemp, Error, TEXT("No data available to receive from server"));
-			return false;
-		}
+		//}
 	}
 	else {
 		UE_LOG(LogTemp, Error, TEXT("Invalid socket"));
 		return false;
 	}
+	return false;
 }
 
 TArray<uint8> UNetworkingHelper::StringToByteArray(FString InputString)

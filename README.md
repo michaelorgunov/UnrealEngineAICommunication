@@ -5,6 +5,12 @@
 
 https://youtu.be/BOZfhUcNiqk?si=y3Z8dgIwf48W7BMg
 
+## The environment:
+- I created a simple 2D game that the AI can control. The game's primary focus is to create a simple environment in which I can experiment with data communication as well as AI algorithms.
+- Using the freely available SunnyLand game art, I created the character and map.
+
+https://ansimuz.itch.io/sunny-land-pixel-game-art
+
 ## File manipulation Method:
 - One can establish two way communication with UE5 through UE writing to a file and the Python script writing to a different file.
 - Ideally, a mutex/lock would be implemented for this shared memory, but it has not been an issue for me so far (may be an issue when running an entire model).

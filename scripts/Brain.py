@@ -5,6 +5,7 @@ from Direction import Direction
 class Brain:
     def __init__(self, size):
         self.step = 0
+        self.size = size
         self.directions = np.empty(size, dtype=object)
         self.randomize()   
         
@@ -17,7 +18,9 @@ class Brain:
             self.directions[i] = random.choice(types)
     
     def clone(self):
-        clone = np.copy(self.directions)            
+        clone = Brain(self.size)
+        clone.step = self.step
+        clone.directions = np.copy(self.directions)            
         return clone
     
     def mutate(self):

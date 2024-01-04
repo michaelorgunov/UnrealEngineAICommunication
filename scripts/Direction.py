@@ -4,5 +4,5 @@ class Direction(Enum):
     LEFT = "a"
     RIGHT = "d"
     UP = "w"
-    NONE = ""
+    NONE = "NONE"
     RESET = "RESET"

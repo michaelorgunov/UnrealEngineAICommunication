@@ -8,7 +8,7 @@ class Population:
     def __init__(self, size):
         self.pawns = []
         self.generation = 1
-        self.bestPawn = Pawn()
+        self.bestPawn = 1
         for i in range(size):
             self.pawns.append(Pawn())
     
@@ -75,3 +75,7 @@ class Population:
     def realive(self):
         for pawn in self.pawns:
             pawn.dead = False
+            pawn.brain.step = 0
+            pawn.nextMove = Direction.NONE
+            pawn.reachedGoal = False
+        

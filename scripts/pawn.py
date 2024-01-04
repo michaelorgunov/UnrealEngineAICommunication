@@ -6,7 +6,7 @@ from Direction import Direction
 
 class Pawn:
     def __init__(self):
-        self.brain = Brain(400)
+        self.brain = Brain(500)
         self.nextMove = Direction.NONE
         self.posx = []
         self.posz = []
@@ -32,16 +32,20 @@ class Pawn:
             self.accz.append(float(accz))
             if (float(posx) < -10 or float(posx) > 2390 or float(posz) < -1600):
                 self.dead = True
-                print("PAWN DIED")
+                # print("PAWN DIED")
             elif (self.distance < 100):
                 self.reachedGoal = True
                 self.dead = True
-                print("PAWN DIED BY REACHING GOAL")
+                # print("PAWN DIED BY REACHING GOAL")
 
     def move(self):
+        if (self.brain.step == self.brain.size):
+            self.dead = True
+            # print("KILLED BY STEP COUNTER. STEP: " + str(self.brain.step) + " SIZE: " + str(self.brain.size))
         if (not self.reachedGoal or not self.dead):
             if (self.brain.directions.size > self.brain.step):
                 move = self.brain.directions[self.brain.step]
+                
                 self.brain.step += 1
                 return move
         else:
@@ -55,7 +59,7 @@ class Pawn:
         
     def retrieveChild(self):
         child = Pawn()
-        child.brain = self.brain
+        child.brain = self.brain.clone()
         return child
     
     def updateMove(self, move):

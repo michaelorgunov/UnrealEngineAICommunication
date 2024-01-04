@@ -57,17 +57,17 @@ bool UNetworkingHelper::SendData(const TArray<uint8>& DataToSend)
 {
 	if (socket) {
 		int32 port = socket->GetPortNo();
-		UE_LOG(LogTemp, Warning, TEXT("SEND TO PORT: %d"), port);
+		//UE_LOG(LogTemp, Warning, TEXT("SEND TO PORT: %d"), port);
 		//uint32 sentAttempts = 0;
 		//while (sentAttempts < 10000) {
 			int32 BytesSent = 0;
 			bool success = socket->Send(DataToSend.GetData(), DataToSend.Num(), BytesSent);
 			if (success) {
-				UE_LOG(LogTemp, Warning, TEXT("Sent Data"));
-
+				//UE_LOG(LogTemp, Warning, TEXT("SEND SUCCESS"));
 				return true;
 			}
 			else {
+				//UE_LOG(LogTemp, Warning, TEXT("SEND FAILURE"));
 				//sentAttempts++;
 				return false;
 			}
@@ -86,7 +86,7 @@ bool UNetworkingHelper::ReceiveData(TArray<uint8>& ReceivedData)
 
 		//UE_LOG(LogTemp, Display, TEXT("TCP RECEIVE: Valid Socket == True"));
 		int32 port = socket->GetPortNo();
-		UE_LOG(LogTemp, Warning, TEXT("RECIEVE FROM PORT: %d"), port);
+		//UE_LOG(LogTemp, Warning, TEXT("RECIEVE FROM PORT: %d"), port);
 		uint32 size;
 		//uint32 receiveAttempts = 0;
 		//while (receiveAttempts < 100000) {
@@ -100,15 +100,18 @@ bool UNetworkingHelper::ReceiveData(TArray<uint8>& ReceivedData)
 
 				if (success && bytesRead > 0) {
 					ReceivedData.SetNum(bytesRead);
+					//UE_LOG(LogTemp, Warning, TEXT("RECEIVE SUCCESS "));
 					return true;
 				}
 				else {
 					//receiveAttempts++;
+					//UE_LOG(LogTemp, Warning, TEXT("RECEIVE FAILURE: NOTHING READ "));
 					return false;
 				}
 			}
 			else {
 				//receiveAttempts++;
+				//UE_LOG(LogTemp, Warning, TEXT("RECEIVE FAILURE: NO PENDING DATA "));
 				return false;
 			}
 		//}

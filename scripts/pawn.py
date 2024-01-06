@@ -6,7 +6,7 @@ from Direction import Direction
 
 class Pawn:
     def __init__(self):
-        self.brain = Brain(200)
+        self.brain = Brain(50)
         self.nextMove = Direction.NONE
         self.posx = []
         self.posz = []
@@ -60,6 +60,7 @@ class Pawn:
     def retrieveChild(self):
         child = Pawn()
         child.brain = self.brain.clone()
+
         return child
     
     def updateMove(self, move):

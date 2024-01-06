@@ -65,7 +65,7 @@ def server_program():
     # pawnCount is number of characters that must connect 
     pawnCount = 60
     counter = 0
-    GENERATION_COUNT = 45
+    GENERATION_COUNT = 20
     population = Population(pawnCount)
     pawnIndexToSocket = {} # Dictionary containing a created index and an identifier for transfers
     

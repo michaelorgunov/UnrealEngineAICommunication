@@ -38,7 +38,7 @@ class Population:
         self.setBestPawn()
         self.calculateFitnessSum()
         print("GENERATION COMPLETE: " + str(self.generation) + " BEST PAWN STEPS: " + str(self.pawns[self.bestPawn].brain.step) + " REACHED GOAL: " + str(self.pawns[self.bestPawn].reachedGoal) + " FITNESS: " + str(self.pawns[self.bestPawn].fitness))
-        mutationRate = .05 * math.e ** (-.09 * self.generation) 
+        mutationRate = .05 * math.e ** (-.2 * self.generation) 
         print("MUTATION RATE FOR GENERATION " + str(self.generation) + " = " + str(mutationRate))
 
         newGeneration.append(self.pawns[self.bestPawn].retrieveChild())
@@ -63,7 +63,7 @@ class Population:
         return None
     
     def mutate(self):
-        mutationRate = .05 * math.e ** (-.09 * self.generation) 
+        mutationRate = 0#.05 * math.e ** (-.3 * self.generation) 
         print("MUTATION RATE FOR GENERATION " + str(self.generation) + " = " + str(mutationRate))
         for pawn in self.pawns:
             pawn.brain.mutate(mutationRate)

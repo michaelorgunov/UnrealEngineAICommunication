@@ -28,6 +28,7 @@ https://github.com/michaelorgunov/TensorflowRL/assets/98727592/62aa0ed0-f16a-433
 
 ## TCP Sockets:
 - Using raw TCP, we can establish a two way communication between UE5 and an external Python server. While there are many tools built into UE5 for networking, I wanted to create my own. There were many challenges encountered with this approach, primarily dealing with undocumented UE source code, UE blueprints not waiting on the receive function before sending, and data processing.
+- This communication pathway was stress tested by creating 1,000 individual characters per generation that connected to the server. 
 ### Unreal Engine:
 - Created C++ class with initialize, receive, send, and data conversion functions to be used within each character. The ```NetworkHelper``` class that I created is then initialized ```OnPlay``` in the character blueprint. The remaining logic is connected to that, and is not dependent on tick. The refresh rate of character movement can thus be manually set in the blueprint. In this example, the genetic algorithm is updating in UE every 0.2 seconds. From experimentation, this was the most effective time period for this algorithm.
 

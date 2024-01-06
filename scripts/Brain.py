@@ -12,7 +12,7 @@ class Brain:
     def randomize(self):
         types = []
         for direction in Direction:
-            if direction != Direction.RESET:
+            if direction != Direction.RESET and direction != Direction.NONE:
                 types.append(direction)
         for i in range(self.directions.size):
             self.directions[i] = random.choice(types)
@@ -23,8 +23,7 @@ class Brain:
         clone.directions = np.copy(self.directions)            
         return clone
     
-    def mutate(self):
-        mutationRate = 0.01
+    def mutate(self, mutationRate):
         types = []
         for direction in Direction:
             if direction != Direction.RESET:

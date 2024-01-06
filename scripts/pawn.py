@@ -6,7 +6,7 @@ from Direction import Direction
 
 class Pawn:
     def __init__(self):
-        self.brain = Brain(500)
+        self.brain = Brain(200)
         self.nextMove = Direction.NONE
         self.posx = []
         self.posz = []
@@ -53,7 +53,7 @@ class Pawn:
         
     def calculateFitness(self):
         if self.reachedGoal:
-            self.fitness = 1.0/(self.brain.step * self.brain.step)
+            self.fitness = 1.0/((self.brain.step * self.brain.step)/2)
         else:
             self.fitness = 1.0/(self.distance*self.distance)
         

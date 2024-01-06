@@ -53,6 +53,8 @@ def handle_client(client, pawn):
                 
                 if pawn.dead:
                     # print("PAWN DEAD. Distance: " + str(distance))
+                    sendMessage(Direction.NONE.value, client)
+                    receiveMessage(client)
                     break
                 sendMessage(pawn.nextMove.value, client)
         except Exception as e:
@@ -61,9 +63,9 @@ def handle_client(client, pawn):
         
 def server_program():
     # pawnCount is number of characters that must connect 
-    pawnCount = 100
+    pawnCount = 60
     counter = 0
-    GENERATION_COUNT = 10
+    GENERATION_COUNT = 45
     population = Population(pawnCount)
     pawnIndexToSocket = {} # Dictionary containing a created index and an identifier for transfers
     
@@ -105,9 +107,6 @@ def server_program():
             if (population.generation >= GENERATION_COUNT):
                 print("REACHED TARGET GENERATION. BEST PAWN STEPS: " + str(population.pawns[population.bestPawn].brain.step) + " REACHED GOAL: " + str(population.pawns[population.bestPawn].reachedGoal) + " FITNESS: " + str(population.pawns[population.bestPawn].fitness))
                 break
-            else:
-                print("GENERATION: " + str(population.generation) + " BEST PAWN STEPS: " + str(population.pawns[population.bestPawn].brain.step) + " REACHED GOAL: " + str(population.pawns[population.bestPawn].reachedGoal) + " FITNESS: " + str(population.pawns[population.bestPawn].fitness))
-
 
             # If all dead, reset position and perform algorithm
             if (population.allDead()):
@@ -120,8 +119,11 @@ def server_program():
                 time.sleep(1)
                 population.calculateFitness()
                 population.naturalSelection()
-                population.mutate()
                 population.realive()
+                
+                for pawns in population.pawns:
+                    if pawns.brain.step != 0:
+                        print("PAWN NOT RESET: " + str(pawns.brain.step))
                 # print("RESURRECTED ALL PAWNS")
                 # for pawn in population.pawns:
                 #     print("PAWN STEP: " + str(pawn.brain.step))
